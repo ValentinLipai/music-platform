@@ -1,0 +1,11 @@
+.track {
+  margin: 10px 0;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.image {
+  object-fit: cover;
+  object-position: center;
+}
