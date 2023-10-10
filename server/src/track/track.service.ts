@@ -6,6 +6,7 @@ import { Comment, CommentDocument } from './schemas/comment.schema';
 import { TrackDTO } from './dto/track.dto';
 import { CommentDTO } from './dto/comment.dto';
 import { FILE_TYPE, FileService } from '../file/file.service';
+import * as process from 'process';
 
 @Injectable()
 export class TrackService {
@@ -30,11 +31,27 @@ export class TrackService {
   }
 
   async getAll(count = 10, offset = 0): Promise<Track[]> {
-    return this.trackModel.find().skip(offset).limit(count);
+    const tracks = await this.trackModel.find().skip(offset).limit(count);
+    return tracks.map((track) => {
+      if (!track.picture.startsWith('http')) {
+        track.picture = `${process.env.SERVER_URL}:${process.env.PORT}/${track.picture}`;
+      }
+      if (!track.audio.startsWith('http')) {
+        track.audio = `${process.env.SERVER_URL}:${process.env.PORT}/${track.audio}`;
+      }
+      return track;
+    });
   }
 
   async getOne(id: Types.ObjectId): Promise<Track> {
-    return this.trackModel.findById(id).populate('comments');
+    const track = await this.trackModel.findById(id).populate('comments');
+    if (!track.picture.startsWith('http')) {
+      track.picture = `${process.env.SERVER_URL}:${process.env.PORT}/${track.picture}`;
+    }
+    if (!track.audio.startsWith('http')) {
+      track.audio = `${process.env.SERVER_URL}:${process.env.PORT}/${track.audio}`;
+    }
+    return track;
   }
 
   async delete(id: Types.ObjectId): Promise<Types.ObjectId> {

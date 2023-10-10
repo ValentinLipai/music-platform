@@ -95,7 +95,7 @@ export const NavBar: React.FC<React.PropsWithChildren> = ({ children }) => {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', position: 'relative', zIndex: 90 }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
